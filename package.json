@@ -1,0 +1,109 @@
+{
+  "name": "ai-context-inspector",
+  "displayName": "AI Context Inspector",
+  "description": "DevTools for AI Coding Agents — see what context influenced AI-generated responses, track file influence, estimate token usage, and understand why your AI said what it said.",
+  "version": "0.1.0",
+  "publisher": "ai-context-inspector",
+  "license": "MIT",
+  "icon": "resources/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ai-context-inspector/ai-context-inspector"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "AI",
+    "context",
+    "inspector",
+    "copilot",
+    "claude",
+    "devtools",
+    "tokens",
+    "explainability"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ai-context-inspector",
+          "title": "AI Context Inspector",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "ai-context-inspector": [
+        {
+          "id": "aiContextInspector.sidebar",
+          "name": "AI Context Inspector",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AI Context Inspector",
+      "properties": {
+        "aiContextInspector.tokenModel": {
+          "type": "string",
+          "default": "claude-3",
+          "enum": [
+            "gpt-4",
+            "gpt-4-turbo",
+            "gpt-4o",
+            "claude-3",
+            "claude-3.5",
+            "gemini-pro"
+          ],
+          "description": "AI model to use for context window size estimation."
+        },
+        "aiContextInspector.warningThreshold": {
+          "type": "number",
+          "default": 80,
+          "minimum": 10,
+          "maximum": 100,
+          "description": "Context utilization percentage at which to show warnings."
+        },
+        "aiContextInspector.historyRetentionDays": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 365,
+          "description": "Number of days to retain file history and influence data."
+        },
+        "aiContextInspector.timelineRetentionDays": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 365,
+          "description": "Number of days to retain timeline events."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile && npm run build:webview",
+    "compile": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "build:webview": "cd webview-ui && npm run build",
+    "dev:webview": "cd webview-ui && npm run dev",
+    "package": "vsce package",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.5.0"
+  }
+}

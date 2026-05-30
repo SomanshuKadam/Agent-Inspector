@@ -1,0 +1,705 @@
+/* ============================================================
+   AI Context Inspector — Design System
+   Uses VS Code CSS variables for native theme integration
+   ============================================================ */
+
+/* ---- Reset & Base ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+  color: var(--vscode-foreground);
+  background-color: var(--vscode-sideBar-background, var(--vscode-editor-background));
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- App Layout ---- */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 12px 12px;
+}
+
+.app-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 3px;
+}
+
+.app-content::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+/* ---- Tab Bar ---- */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--vscode-panel-border, var(--vscode-widget-border, rgba(128,128,128,0.2)));
+  background: var(--vscode-sideBar-background, var(--vscode-editor-background));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 0 4px;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--vscode-foreground);
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-item:hover {
+  opacity: 0.85;
+  background: var(--vscode-list-hoverBackground, rgba(128,128,128,0.1));
+}
+
+.tab-item.active {
+  opacity: 1;
+  border-bottom-color: var(--vscode-focusBorder, #007acc);
+  color: var(--vscode-foreground);
+}
+
+.tab-icon {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+/* ---- Section Cards ---- */
+.section {
+  margin-top: 12px;
+  animation: fadeIn 0.25s ease;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--vscode-descriptionForeground, rgba(128,128,128,0.8));
+}
+
+.section-header-icon {
+  font-size: 14px;
+}
+
+.card {
+  background: var(--vscode-editor-background, rgba(30,30,30,0.5));
+  border: 1px solid var(--vscode-panel-border, var(--vscode-widget-border, rgba(128,128,128,0.15)));
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--vscode-focusBorder, rgba(0,122,204,0.4));
+}
+
+/* ---- File List ---- */
+.file-list {
+  list-style: none;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+  gap: 8px;
+}
+
+.file-item:hover {
+  background: var(--vscode-list-hoverBackground, rgba(128,128,128,0.1));
+}
+
+.file-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.file-tokens {
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Influence Badge ---- */
+.influence-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+.influence-badge.high {
+  background: rgba(220, 38, 38, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.influence-badge.medium {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.influence-badge.low {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* ---- Influence Percentage Bar ---- */
+.influence-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.influence-name {
+  flex: 0 0 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.influence-bar-container {
+  flex: 1;
+  height: 8px;
+  background: var(--vscode-progressBar-background, rgba(128,128,128,0.15));
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.influence-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+.influence-percent {
+  flex: 0 0 36px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* ---- Token Stats ---- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stat-box {
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border, rgba(128,128,128,0.15));
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--vscode-foreground);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* ---- Progress Ring ---- */
+.progress-ring-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.progress-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.progress-ring svg {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: var(--vscode-progressBar-background, rgba(128,128,128,0.15));
+  stroke-width: 8;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+}
+
+.progress-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-ring-value {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-ring-label {
+  font-size: 9px;
+  color: var(--vscode-descriptionForeground);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---- Token Breakdown Bar ---- */
+.token-breakdown {
+  margin: 10px 0;
+}
+
+.token-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--vscode-progressBar-background, rgba(128,128,128,0.15));
+  margin-bottom: 8px;
+}
+
+.token-segment {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.token-segment:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.token-segment:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.token-segment.open-files {
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+
+.token-segment.recent-files {
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+}
+
+.token-segment.metadata {
+  background: linear-gradient(90deg, #a855f7, #c084fc);
+}
+
+.token-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.token-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.token-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.token-legend-dot.open-files { background: #6366f1; }
+.token-legend-dot.recent-files { background: #8b5cf6; }
+.token-legend-dot.metadata { background: #a855f7; }
+
+.token-legend-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
+/* ---- Timeline ---- */
+.timeline {
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--vscode-panel-border, rgba(128,128,128,0.2));
+  border-radius: 1px;
+}
+
+.timeline-event {
+  position: relative;
+  padding: 6px 0 6px 12px;
+  animation: slideIn 0.3s ease;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -17px;
+  top: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--vscode-sideBar-background, var(--vscode-editor-background));
+  z-index: 1;
+}
+
+.timeline-dot.file_opened { background: #6366f1; }
+.timeline-dot.file_edited { background: #f59e0b; }
+.timeline-dot.file_closed { background: #6b7280; }
+.timeline-dot.ai_interaction { background: #10b981; }
+
+.timeline-time {
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-details {
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+.timeline-type {
+  display: inline-block;
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 2px;
+  margin-left: 4px;
+  background: rgba(128,128,128,0.1);
+  color: var(--vscode-descriptionForeground);
+}
+
+/* ---- Warning Box ---- */
+.warning-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+  margin: 8px 0;
+  font-size: 12px;
+  color: #fbbf24;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.warning-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+/* ---- Rules ---- */
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.rule-item:hover {
+  background: var(--vscode-list-hoverBackground, rgba(128,128,128,0.1));
+}
+
+.rule-checkbox {
+  accent-color: var(--vscode-focusBorder, #007acc);
+  cursor: pointer;
+}
+
+.rule-text {
+  flex: 1;
+  font-size: 12px;
+}
+
+.rule-text.disabled {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.rule-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.rule-item:hover .rule-actions {
+  opacity: 1;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--vscode-button-border, transparent);
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--vscode-button-background, #007acc);
+  color: var(--vscode-button-foreground, #fff);
+}
+
+.btn-primary:hover {
+  background: var(--vscode-button-hoverBackground, #0062a3);
+}
+
+.btn-secondary {
+  background: var(--vscode-button-secondaryBackground, rgba(128,128,128,0.2));
+  color: var(--vscode-button-secondaryForeground, var(--vscode-foreground));
+}
+
+.btn-secondary:hover {
+  background: var(--vscode-button-secondaryHoverBackground, rgba(128,128,128,0.3));
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--vscode-foreground);
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.btn-icon:hover {
+  opacity: 1;
+  background: rgba(128,128,128,0.15);
+}
+
+/* ---- Form Elements ---- */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vscode-foreground);
+  margin-bottom: 4px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--vscode-input-border, rgba(128,128,128,0.3));
+  border-radius: 4px;
+  background: var(--vscode-input-background, rgba(30,30,30,0.8));
+  color: var(--vscode-input-foreground, var(--vscode-foreground));
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus {
+  border-color: var(--vscode-focusBorder, #007acc);
+}
+
+.form-select {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--vscode-input-border, rgba(128,128,128,0.3));
+  border-radius: 4px;
+  background: var(--vscode-dropdown-background, var(--vscode-input-background));
+  color: var(--vscode-dropdown-foreground, var(--vscode-foreground));
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  border-color: var(--vscode-focusBorder, #007acc);
+}
+
+.form-hint {
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+  margin-top: 2px;
+}
+
+/* ---- Inline Add Form ---- */
+.add-form {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.add-form .form-input {
+  flex: 1;
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+  text-align: center;
+  padding: 24px 12px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.empty-state-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ---- Model Info ---- */
+.model-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 4px;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.model-name {
+  font-weight: 600;
+  color: #818cf8;
+}
+
+/* ---- Animations ---- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* ---- Separator ---- */
+.separator {
+  height: 1px;
+  background: var(--vscode-panel-border, rgba(128,128,128,0.15));
+  margin: 12px 0;
+}
+
+/* ---- Utility ---- */
+.text-muted {
+  color: var(--vscode-descriptionForeground);
+}
+
+.text-small {
+  font-size: 11px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-4 { margin-bottom: 4px; }
+.mb-8 { margin-bottom: 8px; }
