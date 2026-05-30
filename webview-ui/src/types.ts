@@ -32,8 +32,8 @@ export interface TimelineEvent {
   type: "file_opened" | "file_edited" | "file_closed" | "ai_interaction";
   fileName?: string;
   filePath?: string;
-  description: string;
   details?: string;
+  description?: string;
   timestamp: number;
 }
 
