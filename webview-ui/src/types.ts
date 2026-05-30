@@ -23,13 +23,17 @@ export interface ProjectRule {
   id: string;
   text: string;
   enabled: boolean;
+  createdAt: number;
+  updatedAt?: number;
 }
 
 export interface TimelineEvent {
+  id: string;
   type: "file_opened" | "file_edited" | "file_closed" | "ai_interaction";
   fileName?: string;
   filePath?: string;
   description: string;
+  details?: string;
   timestamp: number;
 }
 
