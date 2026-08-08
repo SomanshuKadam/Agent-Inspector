@@ -2,13 +2,13 @@
   "name": "ai-context-inspector",
   "displayName": "AI Context Inspector",
   "description": "DevTools for AI Coding Agents — see what context influenced AI-generated responses, track file influence, estimate token usage, and understand why your AI said what it said.",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "publisher": "ai-context-inspector",
   "license": "MIT",
   "icon": "resources/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ai-context-inspector/ai-context-inspector"
+    "url": "https://github.com/SomanshuKadam/Agent-Inspector"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -53,46 +53,25 @@
     "configuration": {
       "title": "AI Context Inspector",
       "properties": {
-        "aiContextInspector.tokenModel": {
-          "type": "string",
-          "default": "claude-3",
-          "enum": [
-            "gpt-4",
-            "gpt-4-turbo",
-            "gpt-4o",
-            "claude-3",
-            "claude-3.5",
-            "gemini-pro"
-          ],
-          "description": "AI model to use for context window size estimation."
+        "aiContextInspector.autoDetectionEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically read supported AI agent traces when the extension activates."
         },
-        "aiContextInspector.warningThreshold": {
+        "aiContextInspector.refreshIntervalMs": {
           "type": "number",
-          "default": 80,
-          "minimum": 10,
-          "maximum": 100,
-          "description": "Context utilization percentage at which to show warnings."
-        },
-        "aiContextInspector.historyRetentionDays": {
-          "type": "number",
-          "default": 30,
-          "minimum": 1,
-          "maximum": 365,
-          "description": "Number of days to retain file history and influence data."
-        },
-        "aiContextInspector.timelineRetentionDays": {
-          "type": "number",
-          "default": 30,
-          "minimum": 1,
-          "maximum": 365,
-          "description": "Number of days to retain timeline events."
+          "default": 2000,
+          "minimum": 500,
+          "maximum": 10000,
+          "step": 500,
+          "description": "Polling interval in milliseconds for file-based trace adapters."
         }
       }
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && npm run build:webview",
-    "compile": "node esbuild.js",
+    "vscode:prepublish": "npm run compile",
+    "compile": "node esbuild.js && npm run build:webview",
     "watch": "node esbuild.js --watch",
     "build:webview": "cd webview-ui && npm run build",
     "dev:webview": "cd webview-ui && npm run dev",
