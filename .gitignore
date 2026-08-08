@@ -3,4 +3,5 @@ dist/
 webview-ui/node_modules/
 webview-ui/dist/
 *.vsix
+*.docx
 .vscode/ai-context-inspector/
